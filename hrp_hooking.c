@@ -19,7 +19,7 @@ int __throw_hook_with_push_ret(void *function, void *replacement_function, void 
 
 	#ifdef DBG_MODE
 	fprintf(stderr, "{DBG_MODE} [Warning] : [!] This function may be broken. Please use JMP for avoiding errors.\n");
-	fprintf(stdout, "{DBG_MODE} : [+] Throwing hook @ %lX...\n", (uintptr_t)function);
+	fprintf(stdout, "{DBG_MODE} : [+] Throwing hook @ 0x%lX...\n", (uintptr_t)function);
 	#endif
 
 	if (function == NULL || replacement_function == NULL) {
@@ -81,6 +81,15 @@ int __throw_hook_with_push_ret(void *function, void *replacement_function, void 
 int __throw_hook_with_jmp(void *function, void *replacement_function, void **orig)
 {
 
+	#ifdef DBG_MODE
+	fprintf(stdout, "{DBG_MODE} : [+] Throwing hook @ 0x%lX...\n", (uintptr_t)function);
+	#endif
+
+	if (function == NULL || replacement_function == NULL) {
+		fprintf(stderr, "[!] I cannot throw hooks to NULL.\n");
+		return(-1);
+	}
+
 	int r_offset = replacement_function - function - JMP_SIZE;
 	char *func_ptr = (char*)function;
 	char *original_prologue = malloc(32);
@@ -113,6 +122,10 @@ int __throw_hook_with_jmp(void *function, void *replacement_function, void **ori
 		stolen_bytes += curInstr->length;
 		func_ptr += curInstr->length;
 	}
+
+	#ifdef DBG_MODE
+	fprintf(stdout, "{DBG_MODE} : [+] Space found in prologue. Now performing the jump...\n\n");
+	#endif
 
 	int *p = malloc(sizeof(r_offset));
 	*p = r_offset;

@@ -11,8 +11,7 @@
 #include "hrp_hooking.h"
 #include <stdio.h>
 
-static int (*orig)(void *p) = NULL; // prototype for puts() [we only need the return type, really]
-
+static int (*orig)(void *p) = NULL; // prototype for puts()
 void sample_hook(void *p)
 {
 	printf("I have hooked your puts() function! >:D\nNow calling original...\n\n");
