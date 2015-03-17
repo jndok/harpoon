@@ -19,7 +19,7 @@ These are the known issues with the library.
 
 * **Cannot hook `return` only functions.** –– The library fails to hook functions that only contain a simple `return` statement, falling in an infinite loop. The hook is thrown but doesn't reach the function. Ex.:
 
-  `int my_square(int n) { return n*n; } // this cannot be hooked`
+  `int double_number(int n) { return n*2; } // this cannot be hooked`
 
 ## Updates
 I will add more hooking methods and fix existing. x64 support should also be a thing, if I understand how to do it correctly. Also, debugging functions may come in the future.
