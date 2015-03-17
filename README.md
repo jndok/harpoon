@@ -12,7 +12,14 @@ The library works only on i386 (aka Mach32) for now, so it's almost useless. The
 ## How to inject
 You can use every runtime injecting code to shoot the `dylib`. However, note that `harpoon` doesn't have an injecting routine, so it must be external. If you don't care about runtime injection, go for a classical `DYLD_INSERT_LIBRARIES` and launch the program. Remember to force the flat namespace! Example:
   
-      `DYLD_FORCE_FLAT_NAMESPACE=1 DYLD_INSERT_LIBRARIES=libTest.dylib ./test`
+      DYLD_FORCE_FLAT_NAMESPACE=1 DYLD_INSERT_LIBRARIES=libTest.dylib ./test
+
+## Known issues
+These are the known issues with the library.
+
+* **Cannot hook `return` only functions.** –– The library fails to hook functions that only contain a simple `return` statement, falling in an infinite loop. The hook is thrown but doesn't reach the function. Ex.:
+
+  `int my_square(int n) { return n*n; } // this cannot be hooked`
 
 ## Updates
 I will add more hooking methods and fix existing. x64 support should also be a thing, if I understand how to do it correctly. Also, debugging functions may come in the future.
