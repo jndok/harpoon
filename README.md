@@ -1,7 +1,7 @@
 # harpoon (x86)
 Very simple runtime hooking library for OS X. *for x64, check out the `harpoon64` branch.*
 
-## Updated notes (7/25/15)
+## Update notes (7/25/15)
 A big update is coming soon. Harpoon will use another hooking method, bugfixes, plus huge code cleanup are planned. The two version will remain separate for now, but a merge will come, eventually.
 
 ## Warning
