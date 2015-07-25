@@ -1,13 +1,14 @@
 /* 
 *
 *	This code is purely experimental and still in super duper alpha. Don't expect great stuff.
+*	The code is also awful, sloppy and badly written. It was written in around 4 hours.
+*  	Big cleanup and update coming soon.
 *
 * 	This code is released under the Apache License 2.0 –– http://www.apache.org/licenses/LICENSE-2.0.txt
 *
 *	---
 *
-*	Note: Harpoon only works with i386 (aka x86) for now.
-*	I'm going to add x64 support in the future.
+*	Note:This version only works for x86. Check other brnch for x64.
 *
 */
 
