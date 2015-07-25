@@ -128,9 +128,7 @@ int __throw_hook_with_jmp(void *function, void *replacement_function, void **ori
 	fprintf(stdout, "{DBG_MODE} : [+] Space found in prologue. Now performing the jump...\n\n");
 	#endif
 
-	int *p = malloc(sizeof(r_offset));
-	*p = r_offset;
-	memcpy(jmp+1, (const void*)p, sizeof(r_offset));
+	memcpy(jmp+1, (const void*)&r_offset, sizeof(r_offset));
 
 	memcpy(original_prologue, function, stolen_bytes);
 	memcpy(function, jmp, stolen_bytes); // call
@@ -141,8 +139,7 @@ int __throw_hook_with_jmp(void *function, void *replacement_function, void **ori
 	char *trampoline_address = (char*)((uintptr_t)function + (uintptr_t)stolen_bytes);
 
 	r_offset = trampoline_address - (original_prologue+stolen_bytes) - JMP_SIZE;
-	*p = r_offset;
-	memcpy(jmp+1, (const void*)p, sizeof(r_offset));
+	memcpy(jmp+1, (const void*)&r_offset, sizeof(r_offset));
 
 	memcpy(original_prologue+stolen_bytes, jmp, sizeof(jmp));
 
