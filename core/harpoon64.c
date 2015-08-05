@@ -131,7 +131,7 @@ size_t eat_instructions(void *func)
   return len_cnt;
 }
 
-void throw_hook(void *orig, void *repl, void **origFunc)
+void throw_hook(void *orig, void *repl, void **orig_ptr)
 {
   //__DBG("throw_hook: (%p)\n", orig);
 
@@ -158,5 +158,6 @@ void throw_hook(void *orig, void *repl, void **origFunc)
   //memset(orig, NOP_INSN, stolen_bytes);
   set_jump_to_jump_zone(jzone_ptr, orig);
 
-  *origFunc = trampoline_ptr;
+  if(orig_ptr != NULL)
+    *orig_ptr = trampoline_ptr;
 }
