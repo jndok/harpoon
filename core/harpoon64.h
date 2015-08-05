@@ -62,6 +62,6 @@ static void set_jump_to_jump_zone(void *z_ptr, void *target);
 static void load_shellcode64(char *shellcode, void *to);                                      
 static void load_shellcode32(char *shellcode, void *to);                                      
 
-void throw_hook(void *orig, void *repl, void **origFunc); //exposed
+void throw_hook(void *orig, void *repl, void **orig_ptr); //exposed
 
 #endif
