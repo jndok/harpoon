@@ -1,3 +1,2 @@
-all: test.c
-	gcc testlib.c hrp_hooking.c -dynamiclib -o libTest.dylib -arch i386 -Wno-deprecated-declarations -DDEBUG
-	gcc -m32 test.c -o test
+all:	
+	gcc test.c core/harpoon64.c core/sc/sh64.s ext/dbg/hdbg.c  -lcapstone -o test #-Wl,-no_pie

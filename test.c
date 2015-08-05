@@ -1,19 +1,17 @@
-/*
-	
-	This is a sample user program, which is going
-	to be injected with a maliciously crafted dylib.
+#include "core/harpoon64.h"
 
-	With our example, puts() is going to be hijacked.
-	- Check `testlib.c` for details -
+int (*ptr)(const char *s);
 
-*/
-
-#include <stdio.h>
+void repl(const char *s)
+{
+  printf("hooked!\n");
+  ptr(s); // call orig!
+}
 
 int main(void)
 {
+  throw_hook(puts, repl, (void**)&ptr);
+  puts("hey there! puts() here.");
 
-   	puts("hey im puts() from main()!");
-
-	return(0);
+  return 0;
 }
