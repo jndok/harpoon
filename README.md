@@ -18,7 +18,7 @@ You can help by submitting issues or code fixes, and I'd be absolutely happy if 
 
     #include "core/harpoon64.h"
 
-I will add an installation system in the future.
+I will add an installation system in the future. 
 
 ## Usage
 *harpoon* is very easy to use. It currently has only one exposed function, `throw_hook`, which takes two parameters and one optional parameter.
@@ -29,7 +29,7 @@ When I say *throw an hook*, I mean dynamically replace a generic `a()` function 
 + `void throw_hook(void *orig, void *repl, void **orig_ptr)`: Replace function `*orig` implementation with `*repl` implementation. Optionally return a pointer to the original function in `**orig_ptr`.
 
 The first parameter, `*orig`, is basically the original function, aka the one that will be hooked. The second parameter, `*repl`, is the replacement function, aka the one that will be called instead of `*orig`.
-The third parameter is entirely optional, if not desired pass `NULL`. It is a function pointer, and will hold the original function prologue (see technical explanation below), which can be used to call the `*orig` function.
+The third parameter is entirely optional, if not desired pass `NULL`. It is a function pointer, and will hold the original function prologue, which can be used to call the `*orig` function.
 
 Look in the `test.c` file to see an usage of this function.
 
