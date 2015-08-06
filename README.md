@@ -18,7 +18,7 @@ You can help by submitting issues or code fixes, and I'd be absolutely happy if 
 
     #include "core/harpoon64.h"
 
-I will add an installation system in the future.
+I will add an installation system in the future. 
 
 ## Usage
 *harpoon* is very easy to use. It currently has only one exposed function, `throw_hook`, which takes two parameters and one optional parameter.
