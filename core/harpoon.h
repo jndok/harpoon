@@ -28,27 +28,15 @@
 #ifndef h64_h
 #define h64_h
 
-//#pragma GCC poison printf
-//#pragma message("this version is still unstable and may behave strangely, so be cautious.")
-
-#define JUMP_ZONE_SIZE 0x20
-#define JMP64_LONG_SIZE 0xC
-#define JMP32_SHORT_SIZE 0x5
-
-#define NOP_INSN 0x90
-
 #include <stdio.h>
 #include <string.h>
 #include <malloc/malloc.h>
 #include <assert.h>
 #include <mach/mach.h>
+#include <mach/mach_types.h>
 #include <capstone/capstone.h>
 
 #include "../ext/dbg/hdbg.h"
-
-extern char SH_JMP64_LONG[JMP64_LONG_SIZE];
-extern char SH_JMP32_SHORT[JMP32_SHORT_SIZE];
-extern char JUMP_ZONE[JUMP_ZONE_SIZE];
 
 static void copy_bytes(char *old, char *new, size_t size);                                    
 
