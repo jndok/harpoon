@@ -1,6 +1,6 @@
 all:	
-	gcc core/harpoon64.c core/sc/sh64.s core/sc/sh32.s ext/libcapstone.a -o libhook.dylib -dynamiclib
-
+	gcc core/harpoon.c ext/libcapstone.a -o libhook.dylib -dynamiclib
+	cd tests; make
 clean:
-	rm -f test
+	rm -f tests/test
 	rm -f *.dylib
