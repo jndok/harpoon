@@ -36,20 +36,6 @@
 #include <mach/mach_types.h>
 #include <capstone/capstone.h>
 
-#include "../ext/dbg/hdbg.h"
-
-static void copy_bytes(char *old, char *new, size_t size);                                    
-
-static int make_zone_executable(void *z_ptr, size_t sz);                                      
-
-static int allocate_jump_zone(void **z_ptr, void *orig);                                      
-static int deallocate_jump_zone(void *z_ptr);                                                 
-static int populate_jump_zone(void *z_ptr, char *jmp_shellcode, char *cooked, size_t ck_sz);  
-static void set_jump_to_jump_zone(void *z_ptr, void *target);                                 
-
-static void load_shellcode64(char *shellcode, void *to);                                      
-static void load_shellcode32(char *shellcode, void *to);                                      
-
 void throw_hook(void *orig, void *repl, void **orig_ptr); //exposed
 
 #endif
