@@ -1,10 +1,100 @@
 #include "harpoon64.h"
 
+//temporary
+char i386_shellcode[] = {
+  '\xE9','\x00','\x00','\x00','\x00'
+};
+
 static void copy_bytes(char *old, char *new, size_t size)
 {
   for (size_t i = 0; i < size; i++) {
     *(new+i) = *(old+i);
   }
+}
+
+size_t eat_instructions(void *func)
+{
+  csh handle;
+  cs_insn *insn;
+  size_t cnt;
+  size_t len_cnt = 0;
+
+#if defined (__x86_64__)
+  if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle) != CS_ERR_OK)
+    return 0;
+#elif defined (__i386__)
+  if (cs_open(CS_ARCH_X86, CS_MODE_32, &handle) != CS_ERR_OK)
+    return 0;
+#endif
+
+  cnt = cs_disasm(handle, func, 0xF, 0x0, 0, &insn);
+#if defined (__x86_64__)
+  for (size_t k = 0;; k++) {
+    if (len_cnt < JMP32_SHORT_SIZE + 0x3) {
+      len_cnt+=insn[k].size;
+    } else if (len_cnt >= JMP32_SHORT_SIZE + 0x3) {
+      break;
+    }
+  }
+#elif defined (__i386__)
+  for (size_t k = 0;; k++) {
+    if (len_cnt < JMP32_SHORT_SIZE) {
+      len_cnt+=insn[k].size;
+    } else if (len_cnt >= JMP32_SHORT_SIZE) {
+      break;
+    }
+  }
+#endif
+
+  return len_cnt;
+}
+
+#if defined (__i386__)
+
+/*
+static void load_shellcode32(char *shellcode, void *to)
+{
+  copy_bytes(i386_shellcode, shellcode, JMP32_SHORT_SIZE);
+  memcpy(shellcode+1, (const void*)&to, sizeof(to));
+}
+*/
+
+void throw_hook_i386(void *orig, void *repl, void **orig_ptr)
+{
+  int r_offset = repl - orig - JMP32_SHORT_SIZE;
+  int stolen_bytes = 0;
+  char *func_ptr = (char*)orig;
+  char *original_prologue = malloc(32);
+  memset(original_prologue, 0x90, 32);
+
+  vm_protect(mach_task_self(), (vm_address_t)orig, 32, 0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE);
+  vm_protect(mach_task_self(), (vm_address_t)original_prologue, 32, 0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE);
+
+  stolen_bytes = eat_instructions(orig);
+
+  memcpy(i386_shellcode+1, (const void*)&r_offset, sizeof(r_offset));
+
+  memcpy(original_prologue, orig, stolen_bytes);
+  memcpy(orig, i386_shellcode, stolen_bytes); // call
+
+  char *trampoline_address = (char*)((uintptr_t)orig + (uintptr_t)stolen_bytes);
+
+  r_offset = trampoline_address - (original_prologue+stolen_bytes) - JMP32_SHORT_SIZE;
+  memcpy(i386_shellcode+1, (const void*)&r_offset, sizeof(r_offset));
+
+  memcpy(original_prologue+stolen_bytes, i386_shellcode, sizeof(i386_shellcode));
+  
+  *orig_ptr = original_prologue;
+}
+
+#endif
+
+#if defined (__x86_64__)
+
+static void load_shellcode64(char *shellcode, void *to)
+{
+  copy_bytes(SH_JMP64_LONG, shellcode, JMP64_LONG_SIZE);
+  memcpy(shellcode+2, (const void*)&to, sizeof(to));
 }
 
 static int make_zone_executable(void *z_ptr, size_t sz)
@@ -96,41 +186,6 @@ static void set_jump_to_jump_zone(void *z_ptr, void *target)
   mov((uint64_t *)target, s_jump);
 }
 
-static void load_shellcode64(char *shellcode, void *to)
-{
-  copy_bytes(SH_JMP64_LONG, shellcode, JMP64_LONG_SIZE);
-  memcpy(shellcode+2, (const void*)&to, sizeof(to));
-}
-
-/* this will be used for i386. */
-static void load_shellcode32(char *shellcode, void *to)
-{
-  copy_bytes(SH_JMP32_SHORT, shellcode, JMP32_SHORT_SIZE);
-  memcpy(shellcode+1, (const void*)&to, sizeof(to));
-}
-
-size_t eat_instructions(void *func)
-{
-  csh handle;
-  cs_insn *insn;
-  size_t cnt;
-  size_t len_cnt = 0;
-
-  if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle) != CS_ERR_OK)
-    return 0;
-
-  cnt = cs_disasm(handle, func, 0xF, 0x0, 0, &insn);
-  for (size_t k = 0;; k++) {
-    if (len_cnt < JMP32_SHORT_SIZE + 0x3) {
-      len_cnt+=insn[k].size;
-    } else if (len_cnt >= JMP32_SHORT_SIZE + 0x3) {
-      break;
-    }
-  }
-
-  return len_cnt;
-}
-
 void throw_hook(void *orig, void *repl, void **orig_ptr)
 {
   //__DBG("throw_hook: (%p)\n", orig);
@@ -161,3 +216,5 @@ void throw_hook(void *orig, void *repl, void **orig_ptr)
   if(orig_ptr != NULL)
     *orig_ptr = trampoline_ptr;
 }
+
+#endif
