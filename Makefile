@@ -1,16 +1,17 @@
 all:	
-	gcc test.c core/harpoon64.c core/sc/sh64.s ext/libcapstone.a -o test #-Wl,-no_pie
+	cd examples; make all;
+
+x86_64:
+	cd examples; make x86_64;
 
 i386:
-	gcc test32.c -m32 core/harpoon64.c ext/libcapstone.a -o test32 #-Wl,-no_pie
+	cd examples; make i386;
 
-inject:
-	gcc lib.c core/harpoon64.c core/sc/sh64.s ext/libcapstone.a -dynamiclib -o libinject.dylib
+inject_x86_64:
+	cd examples; make inject_x86_64;
 
 inject_i386:
-	gcc lib32.c -m32 core/harpoon64.c ext/libcapstone.a -dynamiclib -o libinject32.dylib
+	cd examples; make inject_i386;
 
 clean:
-	rm -f test
-	rm -f test32
-	rm -f *.dylib
+	cd examples; rm -f test; rm -f test32; rm -f *.dylib
