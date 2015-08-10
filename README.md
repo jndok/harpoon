@@ -2,11 +2,10 @@
 Lightweight runtime hooking library for OS X.
 
 ## Current status
-The code is currently a mess and will be reorganized again very soon. The new version will support both x64 and i386, plus other enhancements (thanks to @kpwn).
+The code is currently a mess and will be reorganized again very soon. The new version support both x64 and i386, plus other enhancements (thanks to @kpwn).
 *harpoon* was totally rewritten recently, the code has been changed completely, and you should use the new version.
 I will keep updating and improving it, so remember to check back here for any update/bug fix.
-*harpoon* currently supports x64 only, as I am rewriting the x86 part as well. Some of the i386 hooking code is already present in the current version, but it's not implemented yet.
-x86 support will come very soon.
+*harpoon* currently supports x64 and i386, however the new version will be far more stable and faster than this one, so please wait before implementing this into your project.
 
 ### Warning
 *harpoon* is a just for fun project, meaning I'm not putting all my effort into it (for now, at least :P). This being said,
