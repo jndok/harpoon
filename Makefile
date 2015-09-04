@@ -1,17 +1,11 @@
-all:	
-	cd examples; make all;
+all:
+	make x64; make x86;
 
-x86_64:
-	cd examples; make x86_64;
+x64:
+	gcc -m64 test.c hp.c lib/libcapstone.a -o test #-Wl,-no_pie
 
-i386:
-	cd examples; make i386;
-
-inject_x86_64:
-	cd examples; make inject_x86_64;
-
-inject_i386:
-	cd examples; make inject_i386;
+x86:
+	gcc -m32 test.c hp.c lib/libcapstone.a -o test32 #-Wl,-no_pie
 
 clean:
-	cd examples; rm -f test; rm -f test32; rm -f *.dylib
+	rm -rf test test32
